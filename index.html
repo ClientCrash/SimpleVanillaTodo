@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="./css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet" />
+  <link rel="icon" href="./img/meat.png" />
+  <title>TODO - The simple to use ToDo App.</title>
+</head>
+
+<body>
+  <div>
+    <img src="img/checklist.png" width="80vw" height="80wh" />
+    <div id="controllsarea" class="card" style="
+          padding-top: 14px;
+          padding-bottom: 14px;
+          padding-left: 14px;
+          padding-rigth: 14px;
+          background-color: #dbf4a7;
+          display: inline-block;
+        ">
+
+      <form action="POST" onsubmit="event.preventDefault(); formaddTodo();">
+        <input placeholder="Classtest , Homework , Publishing this repo to github ..." size="100" id="addformtextinput" class="longtextarea"
+          type="text" name="text" id="textinp" />
+        <button id="addtotobutton" class="redbutton1" type="submit" style="margin-right: 14px">
+          Add
+        </button>
+      </form>
+    </div>
+    <button id="addtotobutton" class="redbutton1" onclick="saveToCookies();" style="text-align: center">
+      Save ToDos in cookies 🍪
+    </button>
+
+    <div id="todosarea" class="card" style="
+          background: linear-gradient(
+            to right,
+            rgba(3, 133, 153, 1) 0%,
+            rgba(219, 244, 167, 1) 100%
+          );
+        ">
+
+      <h2 style="padding-left: 8px; padding-top: 8px; padding-right: 8px">
+        ToDo
+      </h2>
+      <ul id="todoslist"></ul>
+      <h2 style="padding-left: 8px; padding-top: 8px; padding-right: 8px">
+        In Progress
+      </h2>
+      <ul id="proglist"></ul>
+      <h2 style="padding-left: 8px; padding-top: 8px; padding-right: 8px">
+        Done
+      </h2>
+      <ul id="donelist"></ul>
+    </div>
+  </div>
+  <div class="card righter" id="statsarea" style="
+        background: linear-gradient(to right, #ff7f51 0%, #fffd77 100%);
+        margin-top: 8%;
+      ">
+    <table>
+      <tbody>
+        <tr>
+          <td class="tg-0lax">TODO</td>
+          <td class="tg-0lax" id="todopercentage">100%</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax">In Progress</td>
+          <td class="tg-0lax" id="progpercentage">0%</td>
+        </tr>
+        <tr>
+          <td class="tg-0lax">Done</td>
+          <td class="tg-0lax" id="donepercentage">0%<br /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span onclick="window.open('./info.html',200,400)">Info</span>
+  </div>
+  <div class="righter"><a href="github.com/clientcrash/stodo">Github</a></div>
+</body>
+
+</html>
+
+<script>
+  setInterval(function () {
+    updateStats();
+  }, 2000);
+
+  function updateStats() {
+    console.log("updating stats...");
+
+    todoamount = document.getElementById("todoslist").childElementCount;
+    progamount = document.getElementById("proglist").childElementCount;
+    doneamount = document.getElementById("donelist").childElementCount;
+    totalamount = todoamount + progamount + doneamount;
+    document.getElementById("todopercentage").innerText =
+      ((todoamount / totalamount) * 100).toString() + "%";
+    document.getElementById("progpercentage").innerText =
+      ((progamount / totalamount) * 100).toString() + "%";
+    document.getElementById("donepercentage").innerText =
+      ((doneamount / totalamount) * 100).toString() + "%";
+  }
+
+  function addTodo(text, id, status) {
+    if (text == "") {
+      return;
+    }
+    switch (status) {
+      case "todo":
+        document.getElementById("todoslist").innerHTML +=
+          '<li data-status="' +
+          status +
+          '" id="' +
+          id +
+          '"><div class="todo card"><input type="button" onclick="onCheck(' +
+          id +
+          ')" class="rightal redbutton1" name="Done" id="" style="padding-top:8px;padding-bottom:8px;padding-left:8px;padding-right:8px;margin-left: 8vw;"><span class="rigthal "style="margin-right: 16px;">' +
+          text +
+          "</span></div></li>";
+        break;
+      case "prog":
+        document.getElementById("proglist").innerHTML +=
+          '<li data-status="' +
+          status +
+          '" id="' +
+          id +
+          '"><div class="todo card"><input type="button" onclick="onCheck(' +
+          id +
+          ')" class="rightal redbutton1" name="Done" id="" style="padding-top:8px;padding-bottom:8px;padding-left:8px;padding-right:8px;margin-left: 8vw;"><span class="rigthal "style="margin-right: 16px;">' +
+          text +
+          "</span></div></li>";
+        break;
+      case "done":
+        document.getElementById("donelist").innerHTML +=
+          '<li data-status="' +
+          status +
+          '" id="' +
+          id +
+          '"><div class="todo card"><input type="button" onclick="onCheck(' +
+          id +
+          ')" class="rightal redbutton1" name="Done" id="" style="padding-top:8px;padding-bottom:8px;padding-left:8px;padding-right:8px;margin-left: 8vw;"><span class="rigthal "style="margin-right: 16px;">' +
+          text +
+          "</span></div></li>";
+        break;
+      default:
+        break;
+    }
+  }
+
+  function formaddTodo() {
+    elem3 = document.getElementById("addformtextinput");
+    text = elem3.value;
+    console.log(text);
+    addTodo((text = text), (id = Date.now().toString()), (status = "todo"));
+    elem3.value = "";
+    return true;
+  }
+
+  function onCheck(id) {
+    id = id.toString();
+    console.log("THE ID IS => " + id);
+    elem = document.getElementById(id);
+    console.log("THE ELEMENT IS => ");
+    console.log(elem);
+    status = elem.getAttribute("data-status");
+    console.log("THE STATUS IS " + status);
+    text = elem
+      .getElementsByTagName("div")[0]
+      .getElementsByTagName("span")[0].innerText;
+    console.log("THE TEXT IS " + text);
+    switch (status) {
+      case "todo":
+        document.getElementById(id).remove();
+        addTodo(text, id, "prog");
+        console.log("IS TODO MOVED TO PROG");
+        break;
+      case "prog":
+        document.getElementById(id).remove();
+        addTodo(text, id, "done");
+        break;
+      case "done":
+        document.getElementById(id).remove();
+        break;
+      default:
+        break;
+    }
+  }
+
+  function saveToCookies() {
+    alert("Not Supported!");
+  }
+
+  function loadFromCookies() {}
+</script>
